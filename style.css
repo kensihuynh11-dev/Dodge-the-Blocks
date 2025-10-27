@@ -38,4 +38,55 @@ body {
 #score {
   font-size: 20px;
   margin-top: 10px;
+}body {
+  text-align: center;
+  background-color: #111;
+  color: white;
+  font-family: sans-serif;
 }
+
+#gameInfo {
+  display: flex;
+  justify-content: space-between;
+  width: 400px;
+  margin: 10px auto;
+  font-size: 20px;
+}
+
+#gameArea {
+  position: relative;
+  width: 400px;
+  height: 500px;
+  margin: 20px auto;
+  background-color: #222;
+  border: 2px solid white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#player {
+  position: absolute;
+  bottom: 20px;
+  left: 180px;
+  width: 60px;
+  height: 40px;
+  background-color: limegreen;
+  border-radius: 10px;
+}
+
+.block {
+  position: absolute;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  background-color: orange;
+  border-radius: 50%;
+}
+
+#message {
+  font-size: 24px;
+  margin-top: 15px;
+  color: gold;
+  font-weight: bold;
+}
+

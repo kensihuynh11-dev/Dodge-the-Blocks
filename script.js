@@ -1,62 +1,110 @@
 const gameArea = document.getElementById("gameArea");
 const player = document.getElementById("player");
 const scoreDisplay = document.getElementById("score");
+const livesDisplay = document.getElementById("lives");
+const message = document.getElementById("message");
 
 let score = 0;
+let lives = 3;
 let playerX = 180;
-let gameOver = false;
+let gameRunning = true;
 
-// Di chuyển người chơi bằng phím
+// 🎮 Di chuyển người chơi
 document.addEventListener("keydown", (e) => {
+  if (!gameRunning) return;
   if (e.key === "ArrowLeft" && playerX > 0) playerX -= 20;
-  if (e.key === "ArrowRight" && playerX < 360) playerX += 20;
+  if (e.key === "ArrowRight" && playerX < 340) playerX += 20;
   player.style.left = playerX + "px";
 });
 
-// Hàm tạo block rơi xuống
-function createBlock() {
-  const block = document.createElement("div");
-  block.classList.add("block");
-  block.style.left = Math.random() * 370 + "px";
-  gameArea.appendChild(block);
+// 🍎 Tạo vật rơi
+function createItem() {
+  const item = document.createElement("div");
+  item.classList.add("block");
+  item.style.left = Math.random() * 370 + "px";
+  gameArea.appendChild(item);
 
-  let blockY = 0;
+  let itemY = 0;
   const fall = setInterval(() => {
-    if (gameOver) {
+    if (!gameRunning) {
       clearInterval(fall);
-      block.remove();
+      item.remove();
       return;
     }
 
-    blockY += 5;
-    block.style.top = blockY + "px";
+    itemY += 5;
+    item.style.top = itemY + "px";
 
-    // Kiểm tra va chạm
     const playerRect = player.getBoundingClientRect();
-    const blockRect = block.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
 
+    // 🧮 Nếu bắt được → +1 điểm
     if (
-      blockRect.bottom >= playerRect.top &&
-      blockRect.top <= playerRect.bottom &&
-      blockRect.left < playerRect.right &&
-      blockRect.right > playerRect.left
+      itemRect.bottom >= playerRect.top &&
+      itemRect.top <= playerRect.bottom &&
+      itemRect.left < playerRect.right &&
+      itemRect.right > playerRect.left
     ) {
-      gameOver = true;
-      alert("💥 Game Over! Điểm của bạn: " + score);
-      window.location.reload();
-    }
-
-    // Nếu block rơi hết màn → +1 điểm
-    if (blockY > 500) {
       score++;
       scoreDisplay.textContent = "Điểm: " + score;
       clearInterval(fall);
-      block.remove();
+      item.remove();
+      return;
+    }
+
+    // ⏬ Nếu vật rơi khỏi màn hình → mất 1 tim
+    if (itemY > 500) {
+      clearInterval(fall);
+      item.remove();
+      loseLife();
     }
   }, 30);
 }
 
-// Sinh block liên tục
+// ❤️ Mất 1 mạng
+function loseLife() {
+  lives--;
+  updateLives();
+
+  if (lives <= 0) {
+    gameOver();
+  }
+}
+
+// 🩶 Cập nhật số tim hiển thị
+function updateLives() {
+  const hearts = "❤️".repeat(lives) + "🤍".repeat(3 - lives);
+  livesDisplay.innerHTML = hearts;
+}
+
+// ❌ Game Over
+function gameOver() {
+  gameRunning = false;
+  message.textContent = "💥 Game Over! Nhấn Enter để chơi lại.";
+}
+
+// 🔄 Bắt đầu lại game
+function restartGame() {
+  score = 0;
+  lives = 3;
+  playerX = 180;
+  scoreDisplay.textContent = "Điểm: 0";
+  message.textContent = "";
+  updateLives();
+  gameRunning = true;
+}
+
+// ⏳ Sinh vật rơi liên tục
 setInterval(() => {
-  if (!gameOver) createBlock();
+  if (gameRunning) createItem();
 }, 1000);
+
+// ⌨️ Nhấn Enter để bắt đầu lại
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !gameRunning) {
+    restartGame();
+  }
+});
+
+// Bắt đầu ban đầu
+updateLives();
