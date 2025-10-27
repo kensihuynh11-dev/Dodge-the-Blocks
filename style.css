@@ -3,46 +3,7 @@ body {
   background-color: #111;
   color: white;
   font-family: sans-serif;
-}
-
-#gameArea {
-  position: relative;
-  width: 400px;
-  height: 500px;
-  margin: 20px auto;
-  background-color: #222;
-  border: 2px solid white;
-  border-radius: 10px;
   overflow: hidden;
-}
-
-#player {
-  position: absolute;
-  bottom: 20px;
-  left: 180px;
-  width: 40px;
-  height: 40px;
-  background-color: limegreen;
-  border-radius: 5px;
-}
-
-.block {
-  position: absolute;
-  top: 0;
-  width: 30px;
-  height: 30px;
-  background-color: red;
-  border-radius: 5px;
-}
-
-#score {
-  font-size: 20px;
-  margin-top: 10px;
-}body {
-  text-align: center;
-  background-color: #111;
-  color: white;
-  font-family: sans-serif;
 }
 
 #gameInfo {
@@ -58,10 +19,11 @@ body {
   width: 400px;
   height: 500px;
   margin: 20px auto;
-  background-color: #222;
+  background: linear-gradient(180deg, #222, #111);
   border: 2px solid white;
   border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
 }
 
 #player {
@@ -72,6 +34,7 @@ body {
   height: 40px;
   background-color: limegreen;
   border-radius: 10px;
+  transition: left 0.05s linear;
 }
 
 .block {
@@ -81,6 +44,7 @@ body {
   height: 30px;
   background-color: orange;
   border-radius: 50%;
+  box-shadow: 0 0 10px orange;
 }
 
 #message {
@@ -89,4 +53,3 @@ body {
   color: gold;
   font-weight: bold;
 }
-
