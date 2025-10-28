@@ -45,14 +45,21 @@ function movePlayer() {
   if (keys["ArrowRight"] && playerX < 340) playerX += 6;
   player.style.left = playerX + "px";
 }
-// Điều khiển cảm ứng
-window.addEventListener('touchstart', (e) => {
-  const touchX = e.touches[0].clientX;
-  if (touchX < window.innerWidth / 2) playerX -= 50;
-  else playerX += 50;
-  playerX = Math.max(0, Math.min(playerX, window.innerWidth - 80));
-  updatePlayer();
+// 🎮 Điều khiển bằng cảm ứng (mượt)
+let lastTouchX = null;
+window.addEventListener("touchstart", e => {
+  lastTouchX = e.touches[0].clientX;
 });
+window.addEventListener("touchmove", e => {
+  if (lastTouchX === null) return;
+  const currentX = e.touches[0].clientX;
+  const delta = currentX - lastTouchX;
+  playerX += delta;
+  playerX = Math.max(0, Math.min(playerX, areaWidth - player.offsetWidth));
+  player.style.left = playerX + "px";
+  lastTouchX = currentX;
+});
+window.addEventListener("touchend", () => (lastTouchX = null));
 
 // Điều khiển phím (cho máy tính)
 window.addEventListener('keydown', (e) => {
@@ -92,6 +99,7 @@ function flashEffect(color = "gold") {
   setTimeout(() => (flash.style.opacity = "0"), 50);
   setTimeout(() => flash.remove(), 300);
 }
+
 // 🔄 Reset game
 function restartGame() {
   items.forEach(i => i.remove());
