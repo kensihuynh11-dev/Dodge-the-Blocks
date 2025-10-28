@@ -45,7 +45,22 @@ function movePlayer() {
   if (keys["ArrowRight"] && playerX < 340) playerX += 6;
   player.style.left = playerX + "px";
 }
+// Điều khiển cảm ứng
+window.addEventListener('touchstart', (e) => {
+  const touchX = e.touches[0].clientX;
+  if (touchX < window.innerWidth / 2) playerX -= 50;
+  else playerX += 50;
+  playerX = Math.max(0, Math.min(playerX, window.innerWidth - 80));
+  updatePlayer();
+});
 
+// Điều khiển phím (cho máy tính)
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') playerX -= 50;
+  if (e.key === 'ArrowRight') playerX += 50;
+  playerX = Math.max(0, Math.min(playerX, window.innerWidth - 80));
+  updatePlayer();
+});
 // 🍎 Tạo vật rơi
 function spawnItem() {
   const item = document.createElement("div");
@@ -77,14 +92,6 @@ function flashEffect(color = "gold") {
   setTimeout(() => (flash.style.opacity = "0"), 50);
   setTimeout(() => flash.remove(), 300);
 }
-
-// ❌ Game Over
-function gameOver() {
-  gameRunning = false;
-  message.textContent = "💥 Game Over! Nhấn Enter để chơi lại.";
-  flashEffect("red");
-}
-
 // 🔄 Reset game
 function restartGame() {
   items.forEach(i => i.remove());
@@ -154,7 +161,6 @@ function gameLoop(timestamp) {
 
   requestAnimationFrame(gameLoop);
 }
-
 // ⌨️ Nhấn Enter để restart
 document.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && !gameRunning) {
@@ -164,3 +170,45 @@ document.addEventListener("keydown", (e) => {
 
 updateLives();
 requestAnimationFrame(gameLoop);
+// Kết thúc game
+function endGame() {
+  gameRunning = false;
+  finalScoreDisplay.textContent = score;
+  gameOverScreen.style.display = 'block';
+  clearInterval(itemInterval);
+}
+
+// Chơi lại
+restartBtn.addEventListener('click', () => {
+  score = 0;
+  lives = 3;
+  scoreDisplay.textContent = score;
+  livesDisplay.textContent = lives;
+  gameOverScreen.style.display = 'none';
+  gameRunning = true;
+  itemInterval = setInterval(createItem, 1200);
+});
+// Khi thua
+function endGame() {
+  gameRunning = false;
+  clearInterval(itemInterval);
+  finalScore.textContent = score;
+  gameOverScreen.style.display = 'block';
+}
+
+// Chơi lại
+restartBtn.addEventListener('click', () => {
+  // Reset
+  score = 0;
+  lives = 3;
+  scoreDisplay.textContent = score;
+  livesDisplay.textContent = lives;
+  gameOverScreen.style.display = 'none';
+  gameRunning = true;
+
+  // Xóa vật cũ
+  document.querySelectorAll('.item').forEach(item => item.remove());
+
+  // Bắt đầu lại
+  itemInterval = setInterval(createItem, 1200);
+});
